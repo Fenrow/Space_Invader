@@ -10,3 +10,10 @@ class Settings():
 
         #Ustawienia statku
         self.ship_speed_factor = 1.5
+
+        #Ustawienia pocisku
+        self.bullet_speed_factor = 1
+        self.bullet_width = 3
+        self.bullet_height = 15
+        self.bullet_color = (200, 30, 30)
+        self.bullets_allowed = 5
