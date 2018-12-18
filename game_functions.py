@@ -45,3 +45,12 @@ def update_screen(ai_settings, screen, ship, bullets):
 
     #Wyświetlanie ostatnio zmodyfikowanego ekranu
     pygame.display.flip()
+
+def update_bullets(bullets):
+    """Uaktualnienie położenia pocisków i usunięcie tych niewidocznych na ekranie"""
+    #Uaktualnienie położenia pocisków
+    bullets.update()
+    #Usunięcie pocisków, które znajdują się poza ekranem
+    for bullet in bullets.copy():
+        if bullet.rect.bottom <= 0:
+            bullets.remove(bullet)
