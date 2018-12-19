@@ -7,8 +7,9 @@ class GameStats():
         self.reset_stats()
 
         #Stan gry
-        self.game_active = True
+        self.game_active = False
 
     def reset_stats(self):
-        """Inicjalizacja danych statystycznych które mogą zmieniać się podczas gry"""
+        """Inicjalizacja danych statystycznych które mogą zmieniać się
+        podczas gry"""
         self.ships_left = self.ai_settings.ship_limit

@@ -5,7 +5,7 @@ from time import sleep
 from bullet import Bullet
 from alien import Alien
 
-def check_keydown_events(event, ai_settings, screen, ship, bullets):
+def check_keydown_events(event, ai_settings, screen, stats, ship, aliens, bullets):
     """Reakcja na naciśnięcie klawisza"""
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
@@ -15,6 +15,30 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
         fire_bullet(ai_settings, screen, ship, bullets)
     elif event.key == pygame.K_q:
         sys.exit()
+    elif event.key == pygame.K_g:
+        start_game(ai_settings, screen, stats, True, ship, aliens, bullets)
+
+def check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y):
+    """Rozpoczęcie nowej gry po wciśnięciu przycisku gra"""
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    start_game(ai_settings, screen, stats, button_clicked, ship, aliens, bullets)
+
+def start_game(ai_settings, screen, stats, button_clicked, ship, aliens, bullets):
+    """Rozpoczęcie nowej gry"""
+    if button_clicked and not stats.game_active:
+        #Ukrycie kursowra myszy
+        pygame.mouse.set_visible(False)
+        #Wyzerowanie danych statystycznych gry
+        stats.reset_stats()
+        stats.game_active = True
+
+        #Usunięcie zawartości list aliens i bullets
+        aliens.empty()
+        bullets.empty()
+
+        #Utworzenie nowej floty i wyśrodkowanie statku gracza
+        create_fleet(ai_settings, screen, ship, aliens)
+        ship.center_ship()
 
 def check_keyup_events(event, ship):
     """Reakcja na zwolnienie klawisza"""
@@ -23,19 +47,23 @@ def check_keyup_events(event, ship):
     elif event.key == pygame.K_LEFT:
         ship.moving_left = False
 
-def check_events(ai_settings, screen, ship, bullets):
+def check_events(ai_settings, screen, stats, play_button, ship, aliens, bullets):
     """Reakcja na zdarzenia generowane przez klawiature i mysz"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, ai_settings, screen, ship, bullets)
+            check_keydown_events(event, ai_settings, screen, stats, ship, aliens, bullets)
 
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
-def update_screen(ai_settings, screen, ship, aliens, bullets):
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x , mouse_y = pygame.mouse.get_pos()
+            check_play_button(ai_settings, screen, stats, play_button, ship, aliens, bullets, mouse_x, mouse_y)
+
+def update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button):
     """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu"""
     #Odświeżenie ekranu w trakcie każdej iteracji pętli
     screen.fill(ai_settings.bg_color)
@@ -44,12 +72,16 @@ def update_screen(ai_settings, screen, ship, aliens, bullets):
         bullet.draw_bullet()
     ship.blitme()
     aliens.draw(screen)
+    #Wyświetlanie przycisku tylko wtedy gdy gra jest nieaktywna
+    if not stats.game_active:
+        play_button.draw_button()
 
     #Wyświetlanie ostatnio zmodyfikowanego ekranu
     pygame.display.flip()
 
 def update_bullets(ai_settings, screen, ship, aliens, bullets):
-    """Uaktualnienie położenia pocisków i usunięcie tych niewidocznych na ekranie"""
+    """Uaktualnienie położenia pocisków i usunięcie tych niewidocznych
+     na ekranie"""
     #Uaktualnienie położenia pocisków
     bullets.update()
     #Usunięcie pocisków, które znajdują się poza ekranem
@@ -95,7 +127,8 @@ def create_fleet(ai_settings, screen, ship, aliens):
     #Odległość między obcymi jest równa szerokości Obcego
     alien = Alien(ai_settings, screen)
     number_aliens_x = get_number_aliens_x(ai_settings, alien.rect.width)
-    number_rows = get_number_rows(ai_settings, ship.rect.height, alien.rect.height)
+    number_rows = get_number_rows(ai_settings, ship.rect.height,
+    alien.rect.height)
 
     #Utworzenie rzędu obcych
     for row_number in range(number_rows):
@@ -104,7 +137,8 @@ def create_fleet(ai_settings, screen, ship, aliens):
 
 def get_number_rows(ai_settings, ship_height, alien_height):
     """Ustalenie liczby rzędów obcych które zmieszczą się na ekranie"""
-    available_space_y = (ai_settings.screen_height - (3 * alien_height) - ship_height)
+    available_space_y = (ai_settings.screen_height -
+    (3 * alien_height) - ship_height)
     number_rows = int(available_space_y / (2 * alien_height))
     return number_rows
 
@@ -150,6 +184,7 @@ def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
         sleep(0.5)
     else:
         stats.game_active = False
+        pygame.mouse.set_visible(True)
 
 def chceck_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets):
     """Sprawdzenie czy którykolwiek obcy dotarł do dolnej krawędzi ekranu"""

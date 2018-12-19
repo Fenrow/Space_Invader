@@ -18,7 +18,8 @@ class Ship():
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
 
-        #Punkt środkowy statku jest przechowywany w postaci liczby zmiennoprzecinkowej
+        #Punkt środkowy statku jest przechowywany
+        #w postaci liczby zmiennoprzecinkowej
         self.center = float(self.rect.centerx)
 
         #Opcje wskazujące na poruszanie się statku
