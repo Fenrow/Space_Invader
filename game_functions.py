@@ -47,7 +47,7 @@ def update_screen(ai_settings, screen, ship, aliens, bullets):
     #Wyświetlanie ostatnio zmodyfikowanego ekranu
     pygame.display.flip()
 
-def update_bullets(bullets):
+def update_bullets(ai_settings, screen, ship, aliens, bullets):
     """Uaktualnienie położenia pocisków i usunięcie tych niewidocznych na ekranie"""
     #Uaktualnienie położenia pocisków
     bullets.update()
@@ -55,6 +55,12 @@ def update_bullets(bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+    #Sprawdzenie kolizji między pociskiem a obcym
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+    if len(aliens) == 0:
+        bullets.empty()
+        create_fleet(ai_settings, screen, ship, aliens)
 
 def fire_bullet(ai_settings, screen, ship, bullets):
     """Wystrzelenie pocisku jeśli nie przekroczono ustalonego limitu"""
@@ -96,3 +102,21 @@ def get_number_rows(ai_settings, ship_height, alien_height):
     available_space_y = (ai_settings.screen_height - (3 * alien_height) - ship_height)
     number_rows = int(available_space_y / (2 * alien_height))
     return number_rows
+
+def chceck_fleet_edges(ai_settings, aliens):
+    """Reakcja gdy obcy dotrze do krawędzi ekranu"""
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(ai_settings, aliens)
+            break
+
+def change_fleet_direction(ai_settings, aliens):
+    """Przesunięcie floty w dół i zmiana kierunku"""
+    for alien in aliens.sprites():
+        alien.rect.y += ai_settings.fleet_drop_speed
+    ai_settings.fleet_direction *= -1
+
+def update_aliens(ai_settings, aliens):
+    """Uaktualnienie położenia obcych"""
+    chceck_fleet_edges(ai_settings, aliens)
+    aliens.update()

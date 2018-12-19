@@ -12,8 +12,13 @@ class Settings():
         self.ship_speed_factor = 1.5
 
         #Ustawienia pocisku
-        self.bullet_speed_factor = 1
+        self.bullet_speed_factor = 3
         self.bullet_width = 3
         self.bullet_height = 15
         self.bullet_color = (200, 30, 30)
         self.bullets_allowed = 5
+
+        #Ustawienia obcego
+        self.alien_speed_factor = 1
+        self.fleet_drop_speed = 10
+        self.fleet_direction = 1 #Wartość 1 --> Wartość -1 <--
