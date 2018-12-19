@@ -40,3 +40,7 @@ class Ship():
 
         #uaktualnienie obiektu rect na podstawie wartości self.center
         self.rect.centerx = self.center
+
+    def center_ship(self):
+        """Umieszczenie statku na środku przy dolnej krawędzi"""
+        self.center = self.screen_rect.centerx

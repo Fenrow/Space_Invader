@@ -1,5 +1,6 @@
 import sys
 import pygame
+from time import sleep
 
 from bullet import Bullet
 from alien import Alien
@@ -55,6 +56,10 @@ def update_bullets(ai_settings, screen, ship, aliens, bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+
+    chceck_bullet_alien_collision(ai_settings, screen, ship, aliens, bullets)
+
+def chceck_bullet_alien_collision(ai_settings, screen, ship, aliens, bullets):
     #Sprawdzenie kolizji między pociskiem a obcym
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
@@ -116,7 +121,27 @@ def change_fleet_direction(ai_settings, aliens):
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
 
-def update_aliens(ai_settings, aliens):
+def update_aliens(ai_settings, stats, screen, ship, aliens, bullets):
     """Uaktualnienie położenia obcych"""
     chceck_fleet_edges(ai_settings, aliens)
     aliens.update()
+
+    #Wykrywanie kolizji między obcym a statkiem gracza
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(ai_settings, stats, screen, ship, aliens, bullets)
+
+def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
+    """Reakcja na uderzenie obcego w statek"""
+    #Zmienjszenie wartości przechowywanej w ships_left
+    stats.ships_left -= 1
+
+    #Usunięcie zawartości list aliens i bullets
+    aliens.empty()
+    bullets.empty()
+
+    #Utworzenie nowej floty i wyśrodkowanie statku
+    create_fleet(ai_settings, screen, ship, aliens)
+    ship.center_ship()
+
+    #Pauza
+    sleep(0.5)
