@@ -11,7 +11,9 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
         ship.moving_left = True
     elif event.key == pygame.K_SPACE:
         fire_bullet(ai_settings, screen, ship, bullets)
-        
+    elif event.key == pygame.K_q:
+        sys.exit()
+
 def check_keyup_events(event, ship):
     """Reakcja na zwolnienie klawisza"""
     if event.key == pygame.K_RIGHT:
@@ -31,7 +33,7 @@ def check_events(ai_settings, screen, ship, bullets):
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
-def update_screen(ai_settings, screen, ship, bullets):
+def update_screen(ai_settings, screen, ship, alien, bullets):
     """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu"""
     #Odświeżenie ekranu w trakcie każdej iteracji pętli
     screen.fill(ai_settings.bg_color)
@@ -39,6 +41,7 @@ def update_screen(ai_settings, screen, ship, bullets):
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
+    alien.blitme()
 
     #Wyświetlanie ostatnio zmodyfikowanego ekranu
     pygame.display.flip()
