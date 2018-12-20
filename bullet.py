@@ -7,6 +7,7 @@ class Bullet(Sprite):
 
     def __init__(self, ai_settings, screen, ship):
         """Utworzenie obiektu pocisku w aktualnym położeniu statku"""
+
         super(Bullet, self).__init__()
         self.screen = screen
 
@@ -27,11 +28,14 @@ class Bullet(Sprite):
 
     def update(self):
         """Poruszanie pociskiem po ekranie"""
+
         #Uaktualnienie położenia pocisku
         self.y -=self.speed_factor
+
         #Uaktualnienie położenia prostokąta pocisku
         self.rect.y = self.y
 
     def draw_bullet(self):
         """Wyświetlanie pocisku na ekranie"""
+
         pygame.draw.rect(self.screen, self.color, self.rect)

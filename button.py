@@ -5,6 +5,7 @@ class Button():
 
     def __init__(self, width, height, ai_settings, screen, msg):
         """Inicjalizacja atrybutów przycisku"""
+
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
@@ -26,6 +27,7 @@ class Button():
     def prep_msg(self, msg):
         """Umieszczenie komunikatu w wygenerowanym obrazie i wyśrodkowanie
         tekstu na przycisku"""
+
         self.msg_image = self.font.render(msg, True, self.text_color,
         self.button_color)
         self.msg_image_rect = self.msg_image.get_rect()
@@ -33,5 +35,6 @@ class Button():
 
     def draw_button(self):
         """Wyświetlanie pustego przycisku a następnie komunikatu na nim"""
+
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)

@@ -1,11 +1,13 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship():
+class Ship(Sprite):
     """Klasa odpowiedzialna za statek gracza"""
 
     def __init__(self, ai_settings, screen):
         """Inicjalizacja statku kosmicznego i jego położenie początkowe"""
 
+        super(Ship, self).__init__()
         self.screen = screen
         self.ai_settings = ai_settings
 
@@ -28,11 +30,13 @@ class Ship():
 
     def blitme(self):
         """Wyświetlenie statku w aktualnym położeniu"""
+
         self.screen.blit(self.image, self.rect)
 
     def update(self):
         """Uaktualnienie położenia statku na podstawie opcji wskazującej na jego
         ruch"""
+
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.center += self.ai_settings.ship_speed_factor
 
@@ -44,4 +48,5 @@ class Ship():
 
     def center_ship(self):
         """Umieszczenie statku na środku przy dolnej krawędzi"""
+
         self.center = self.screen_rect.centerx
