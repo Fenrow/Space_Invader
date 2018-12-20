@@ -1,3 +1,5 @@
+import json
+
 class GameStats():
     """Monitorowanie danych statystycznych w grze"""
 
@@ -10,8 +12,14 @@ class GameStats():
         #Stan gry
         self.game_active = False
 
-        #Najlepszy wynik
-        self.high_score = 0
+        #Próba otworzenia pliku z najwyższym wynikiem jeśli nie istnieje
+        #Wyzerowanie wyniku
+        try:
+            with open(self.ai_settings.fname_high_score) as fname:
+                self.high_score = json.load(fname)
+        except FileNotFoundError:
+            #Najlepszy wynik
+            self.high_score = 0
 
         #Bieżący poziom
         self.level = 1

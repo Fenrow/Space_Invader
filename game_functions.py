@@ -1,6 +1,7 @@
 import sys
 import pygame
 from time import sleep
+import json
 
 from bullet import Bullet
 from alien import Alien
@@ -18,6 +19,7 @@ def check_keydown_events(event, ai_settings, screen, stats, sb, play_button, shi
         fire_bullet(ai_settings, screen, ship, bullets)
 
     elif event.key == pygame.K_q:
+        save_high_score(ai_settings, stats)
         sys.exit()
 
     elif event.key == pygame.K_g:
@@ -72,6 +74,7 @@ def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens, bull
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
+            save_high_score(ai_settings)
             sys.exit()
 
         elif event.type == pygame.KEYDOWN:
@@ -226,7 +229,7 @@ def ship_hit(ai_settings, stats, screen, sb, ship, aliens, bullets):
 
         #Uaktualnienie tablicy statków (żyć)
         sb.prep_ships()
-        
+
         #Usunięcie zawartości list aliens i bullets
         aliens.empty()
         bullets.empty()
@@ -257,3 +260,9 @@ def check_high_score(stats, sb):
     if stats.score > stats.high_score:
         stats.high_score = stats.score
         sb.prep_high_score()
+
+def save_high_score(ai_settings, stats):
+    """Zapisanie najwyżeszego wyniku do pliku"""
+
+    with open(ai_settings.fname_high_score, 'w') as fname:
+        json.dump(stats.high_score, fname)

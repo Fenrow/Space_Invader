@@ -27,6 +27,9 @@ class Settings():
         #Łatwa zmiana liczby punktów przyznawanych za zestrzelenie Obcego
         self.score_scale = 1.5
 
+        #Ścieżka dostępu do pliku zapisującego najwyżeszy wynik
+        self.fname_high_score = "highscore.json" 
+
         self.initialize_dynamic_settings()
 
     def initialize_dynamic_settings(self):
